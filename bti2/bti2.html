@@ -1,218 +1,36 @@
 <!DOCTYPE html>
 <html>
+<title>A simple Jsmol example</title>
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Jmol, see http://www.jmol.org">
-  <meta name="author" content="Ms. Maz">
-  <meta name="keywords" content="generated_by_Jmol_Webexport">
-  <title>BetaTestingforInsulin2</title>
-  <style type="text/css">
-	h1 { font-size:1.5em; text-align:center; }
-	.section { clear:both; padding:0.6em 0; }
-	.sceneWrapper {
-		border:1px solid gray;
-		border-radius:1ex;
-		margin:0.3em 1ex; 
-		font-size:0.9em; 
-	}
-	.sceneWrapper td {
-		padding:0.5ex;
-	}
-  .JmolDiv { 
-		padding:0.3em 0.5ex; 
-		font-size:0.9em; 
-		background-repeat:no-repeat; 
-		background-position:center;
-  }
-  .floatRight { float:right; }
-  .floatLeft { float:left; }
-  .update-info {
-		clear:both;
-		padding-top:1em;
-		text-align:right;
-		font-size:0.75em;
-		font-style:italic;
-  }
-	.update-info + .update-info {
-		padding-top:0.2em;
-		margin-bottom:1em;
-	}
-	.widgetItemPopin { /* each widget in a PopIn page goes in a div with this class */
-		 margin:0.2em 0;
-	}
-  </style>  
+<script type="text/javascript" src="jsmol/JSmoljQuery.js"></script>
+<script type="text/javascript" src="jsmol/JSmolCore.js"></script>
+<script type="text/javascript" src="jsmol/JSmolApplet.js"></script>
+<script type="text/javascript" src="jsmol/JSmolApi.js"></script>
+<script type="text/javascript" src="jsmol/j2s/j2sjmol.js"></script>
+<script type="text/javascript" src="jsmol/JSmol.js"></script>
+<!-- // following two only necessary for WebGL version: -->
+<script type="text/javascript" src="jsmol/JSmolThree.js"></script>
+<script type="text/javascript" src="jsmol/JSmolGLmol.js"></script>
 
-  <!-- Below is used locally but not on server. May generate warnings. -->
-  <script type="text/javascript" src="https://klmaslowski.github.io/JSmol.min.js"></script>
-  <script src="support.js" type="text/javascript"></script>
-  
-  
-  <!-- Below is used on server, but not locally. May generate warnings.-->
-  <script type="text/javascript" src="http://chemapps.stolaf.edu/jmol/jsmol/JSmol.min.js"></script>
-  <script type="text/javascript">
-  var jmolApplet; //our viewer
-  var jmolInfo; //setup parameters
-  ;(function() {
-
-// Developers: The debugCode flag is checked in j2s/java/core.z.js, 
-// and, if TRUE, skips loading the core methods, forcing those
-// to be read from their individual directories. Set this
-// true if you want to do some code debugging by inserting
-// System.out.println, document.title, or alert commands
-// anywhere in the Java or Jmol code.
-
-var s = document.location.search;
-Jmol.debugCode = (s.indexOf("debugcode") >= 0);
-
-jmol_isReady = function(jmolApplet) {
-}		
-
-jmolInfo = { //default values
-	width: "100%",
-	height: "100%",
-	debug: false,
-	color: "white",
-	addSelectionOptions: false,
-	use: "HTML5",
-	coverImage: "@APPLETNAME0@.png",        // initial image instead of applet
-	coverScript: "",	// special script for click of cover image (otherwise equal to script)
-	deferApplet: true,                  // wait to load applet until click
-	deferUncover: true,                 // wait to uncover applet until script completed
-		//The paths below assume your server is set up with standard JSmol directory.  If not
-		//they will need modification for the page to work.
-	jarPath: "http://chemapps.stolaf.edu/jmol/jsmol/java", //path to applet .jar files on server.
-	j2sPath: "http://chemapps.stolaf.edu/jmol/jsmol/j2s",//path to javascript version.
-	serverURL: "http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php", //if your own server does not allow php, you can change to http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php
-	makeLiveImg:"http://chemapps.stolaf.edu/jmol/jsmol/j2s/img/play_make_live.jpg",//path to activate 3-D image.
-	jarFile: "JmolAppletSigned0.jar",
-	isSigned: true,
-	//disableJ2SLoadMonitor: true,
-	disableInitialConsole: true,
-	readyFunction: jmol_isReady,
-	script: ""
+<script type="text/javascript">
+var Info = {
+  width: 300,
+  height: 300,
+//  serverURL: "http://chemapps.stolaf.edu/jmol/jsmol/jsmol.php ",
+  serverURL: "http://propka.ki.ku.dk/~jhjensen/jsmol/jsmol.php ",
+  use: "HTML5",
+  j2sPath: "jsmol/j2s",
+  console: "jmolApplet0_infodiv"
 }
-
-// ?_USE=JAVA   ?_USE=SIGNED   ?_USE=HTML5
-   if (s.indexOf("USE=") >= 0)
-     jmolInfo.use = s.split("USE=")[1].split("&")[0]
-   else if (s.indexOf("JAVA") >= 0)
-     jmolInfo.use = "JAVA"
-   else if (s.indexOf("IMAGE") >= 0)
-     jmolInfo.use = "IMAGE"
-   else if (s.indexOf("NOWEBGL") >= 0)
-     jmolInfo.use = "JAVA IMAGE"
-   else if (s.indexOf("WEBGL") >= 0)
-     jmolInfo.use = "WEBGL HTML5"
-   if (s.indexOf("NOWEBGL") >= 0)
-     jmolInfo.use = use.replace(/WEBGL/,"")
-   var useSignedApplet = (s.indexOf("SIGNED") >= 0);
-   if(useSignedApplet && jmolInfo.use == "HTML5") jmolInfo.use = "JAVA";
-
-   var protocol = window.location.protocol.toLowerCase();
-   if (protocol == "file:") { 
-    jmolInfo.jarPath = "https://klmaslowski.github.io/java";
-    jmolInfo.j2sPath = "https://klmaslowski.github.io/j2s";
-    jmolInfo.serverURL = "http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php"; //you can change to your own path
-    jmolInfo.makeLiveImg = "https://klmaslowski.github.io/j2s/img/play_make_live.jpg";
-    jmolInfo.jarFile = "JmolAppletSigned.jar";
-    jmolInfo.isSigned= "true";
-  }
-})();
-
-$(document).ready(function(){//set up each of the applet locations
-	   var jmolInfo0=jmolInfo;
-   jmolInfo0.coverImage="1.png";
-   jmolInfo0.coverScript="javascript revealPopinWidgets(0);";
-   jmolInfo0.script="load 1.spt";
-   $("#Jmol0").html(Jmol.getAppletHtml("jmolApplet0",jmolInfo0));
-   var jmolInfo1=jmolInfo;
-   jmolInfo1.coverImage="2.png";
-   jmolInfo1.coverScript="javascript revealPopinWidgets(1);";
-   jmolInfo1.script="load 2.spt";
-   $("#Jmol1").html(Jmol.getAppletHtml("jmolApplet1",jmolInfo1));
-
-});
-  </script>
+</script>
 </head>
 <body>
-    <div id="introdiv">
-      <h1 id="titlediv">
-        Insert the page TITLE here.
-      </h1>
-      Insert the page INTRODUCTION here.
-    </div>
-
-    
-
-    <div id="section_1" class="section">
-	<table id="scene_1" class="sceneWrapper floatRight" style="width:800px;">
-		<tr>
-			<td id="leftJmolCntl0" style="visibility:hidden"></td>
-			<td style="width:800px;">
-			<div id="Jmol0" class="JmolDiv" style="width:800px; height:800px; background-image:url(1.png)">
-				Jmol0 will appear here.
-			</div>
-			</td>
-			<td id="rightJmolCntl0" style="visibility:hidden"></td>
-		</tr>
-		<tr>
-			<td colspan="3">     
-				CLICK IMAGE TO ACTIVATE 3D <br/> Insert a caption for &#x201C;1&#x201D; here.		
-			</td>
-		</tr>
-	</table>
-	<div id="text_1">
-		Insert additional explanatory text here. Long text will wrap around Jmol model &#x201C;1&#x201D;.
-	</div>
-</div>
-
-<div id="section_2" class="section">
-	<table id="scene_2" class="sceneWrapper floatLeft" style="width:800px;">
-		<tr>
-			<td id="leftJmolCntl1" style="visibility:hidden"></td>
-			<td style="width:800px;">
-			<div id="Jmol1" class="JmolDiv" style="width:800px; height:800px; background-image:url(2.png)">
-				Jmol1 will appear here.
-			</div>
-			</td>
-			<td id="rightJmolCntl1" style="visibility:hidden"></td>
-		</tr>
-		<tr>
-			<td colspan="3">     
-				CLICK IMAGE TO ACTIVATE 3D <br/> Insert a caption for &#x201C;2&#x201D; here.		
-			</td>
-		</tr>
-	</table>
-	<div id="text_2">
-		Insert additional explanatory text here. Long text will wrap around Jmol model &#x201C;2&#x201D;.
-	</div>
-</div>
-
-
-
-    <div id="creationdiv" class="update-info">
-      Page skeleton and JavaScript generated by the Export to Web module of  <a href="http://jmol.sourceforge.net">Jmol 14.29.46  2019-06-03 12:50</a>  on Jul 9, 2019.
-    </div>
-    <div id="authordiv" class="update-info">
-      Based on a template by A. Herr&#x00E1;ez and J. Gutow
-    </div>
-    <div id="logdiv" style="display:none">
-      <pre>
-Using directory /Users/komusume/Desktop/bti2
-  adding support.js
-  ...jmolApplet0
-      ...adding 1.png
-      ...copying
-https://files.rcsb.org/download/3I40.pdb
-         to
-/Users/komusume/Desktop/bti2/3I40.pdb
-      ...adding 1.spt
-  ...jmolApplet1
-      ...adding 2.png
-      ...adding 2.spt
-
-</pre>
-
-    </div>
+<script type="text/javascript">
+  jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+  Jmol.script(jmolApplet0,"background black;load caffeine.xyz")
+</script>
+<br>
+<a href="javascript:Jmol.script(jmolApplet0,'spin on')">spin</a>
+<a href="javascript:Jmol.script(jmolApplet0,'spin off')">off</a>
 </body>
 </html>
